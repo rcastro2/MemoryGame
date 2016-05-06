@@ -19,17 +19,17 @@
       width:440px;
       height:440px;
       margin:0 auto;
-      background-image:url("bk.gif");
+      background-image:url("");
     }
     .tile{
       display:inline-block;
-      width:100px;
-      height:100px;
+      width:103px;
+      height:103px;
 
     }
     .tile div{
-      width:100px;
-      height:100px;
+      width:103px;
+      height:103px;
       text-align:center;
       font-size:40pt;
       border:solid 2px black;
@@ -38,7 +38,7 @@
       position:absolute;
       transform: rotateY( 0deg);
       backface-visibility: hidden;
-      background-color:green;
+      background-color:black;
       transition:1s;
       background-image:url("card.png");
     }
@@ -117,7 +117,6 @@
       if(numOfCardsFlipped > 2){
           flipAllTiles();
           numOfCardsFlipped = 1;
-          console.log(attempts);
       }
       //Flip Card
       currentCard.style.transform = "rotateY(180deg)";
@@ -132,10 +131,14 @@
     function nextElementAfter(obj){
       return obj.nextSibling.nextElementSibling;
     }
-
+    function randomBK(){
+        var num = Math.floor(Math.random()*5)+1;
+        document.querySelector("#board").style.backgroundImage="url('bk" + num +".png')"
+    }
     function init(){
       generateTilesData();
       buildTiles();
+      randomBK();
     }
   </script>
 </head>

@@ -8,6 +8,7 @@ Memory Game created to explore with students,<br/>
 * templating
 * Firebase
 * problem solving
-<br/>
-[Live Example](https://rcastro2.github.io/MemoryGame)
+
+
+[Live Example](https://rcastro2.github.io/MemoryGame):thumbsup:
 
