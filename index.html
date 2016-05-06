@@ -89,19 +89,33 @@
       }
       document.getElementById("board").innerHTML = build.join("");
     }
+    
+    function flipAllTiles(){
+        var tilesFront = document.querySelectorAll(".front")
+        var tilesBack = document.querySelectorAll(".back")
+        for(i = 0;i < tilesFront.length;i++){
+            tilesFront[i].style.transform = "rotateY(0deg)";
+        }
+        for(i = 0;i < tilesBack.length;i++){
+            tilesBack[i].style.transform = "rotateY(180deg)";
+        }
+    }
+    function checkMatch(currentCard){
+        if(lastCard.getAttribute("data") == currentCard.getAttribute("data")){
+            currentCard.style.visibility = "hidden";
+            nextElementAfter(currentCard).style.visibility = "hidden";
+            lastCard.style.visibility = "hidden";
+            nextElementAfter(lastCard).style.visibility = "hidden";
+        }
+        attempts++;
+        document.querySelector("#attempts").innerHTML = "Attempts: " + attempts
+    }
 
     function selectTile(currentCard){
       numOfCardsFlipped++;
       //Flip all cards if this is the 3rd card being flipped
       if(numOfCardsFlipped > 2){
-          var tilesFront = document.querySelectorAll(".front")
-          var tilesBack = document.querySelectorAll(".back")
-          for(i = 0;i < tilesFront.length;i++){
-            tilesFront[i].style.transform = "rotateY(0deg)";
-          }
-          for(i = 0;i < tilesBack.length;i++){
-            tilesBack[i].style.transform = "rotateY(180deg)";
-          }
+          flipAllTiles();
           numOfCardsFlipped = 1;
           console.log(attempts);
       }
@@ -111,14 +125,7 @@
 
       //Check for match if 2 cards have been flipped
       if(numOfCardsFlipped == 2){
-          if(lastCard.getAttribute("data") == currentCard.getAttribute("data")){
-            currentCard.style.visibility = "hidden";
-            nextElementAfter(currentCard).style.visibility = "hidden";
-            lastCard.style.visibility = "hidden";
-            nextElementAfter(lastCard).style.visibility = "hidden";
-          }
-          attempts++;
-          document.querySelector("#attempts").innerHTML = "Attempts: " + attempts
+          checkMatch(currentCard);
       }
       lastCard = currentCard;
     }
