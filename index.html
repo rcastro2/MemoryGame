@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+<head>
+  <title>
+
+  </title>
+  <style>
+
+    #board{
+      width:440px;
+      height:440px;
+      margin:0 auto;
+      background-image:url("bk.gif");
+    }
+    .tile{
+      display:inline-block;
+      width:100px;
+      height:100px;
+
+    }
+    .tile div{
+      width:100px;
+      height:100px;
+      text-align:center;
+      font-size:40pt;
+      border:solid 2px black;
+    }
+    .front{
+      position:absolute;
+      transform: rotateY( 0deg);
+      backface-visibility: hidden;
+      background-color:green;
+      transition:1s;
+      background-image:url("card.png");
+    }
+    .back{
+      position:absolute;
+      transform: rotateY( 180deg);
+
+      backface-visibility: hidden;
+      background-color:yellow;
+      transition:1s;
+    }
+
+  </style>
+  <script src="mustache.js"></script>
+  <script id="tileTemplate" type="text/template">
+    <div class='tile'>
+      <div class="front" onclick="selectTile(this)" data="{{num}}"></div>
+      <div class="back"><img src="{{num}}.png"></div>
+    </div>
+  </script>
+  <script>
+    var tilesData = [];
+    var attempts = 0;
+    function generateTilesData(){
+      var pos1,pos2,tmp;
+      for(i = 0; i < 8;i++){
+        tilesData.push(i+1);
+        tilesData.push(i+1);
+      }
+      for(i = 0; i < 100; i++){
+        pos1 = Math.floor((Math.random()*16));
+        pos2 = Math.floor((Math.random()*16));
+        tmp = tilesData[pos1];
+        tilesData[pos1] = tilesData[pos2];
+        tilesData[pos2] = tmp;
+      }
+    }
+    function buildTiles(){
+      var build = new Array();
+      var template = document.querySelector("#tileTemplate").innerHTML
+      for(i = 0; i < 16;i++){
+          build.push(Mustache.render(template,{"num":tilesData[i]}));
+      }
+      document.getElementById("board").innerHTML = build.join("");
+    }
+    var count = 0;
+    var card;
+    function selectTile(obj){
+      count++;
+      //Flip all cards if this is the 3rd card being flipped
+      if(count > 2){
+          var tilesFront = document.querySelectorAll(".front")
+          var tilesBack = document.querySelectorAll(".back")
+          for(i = 0;i < tilesFront.length;i++){
+            tilesFront[i].style.transform = "rotateY(0deg)";
+          }
+          for(i = 0;i < tilesBack.length;i++){
+            tilesBack[i].style.transform = "rotateY(180deg)";
+          }
+          count = 1;
+          attempts++;
+          console.log(attempts);
+      }
+      //Flip Card
+      obj.style.transform = "rotateY(180deg)";
+      nextElementAfter(obj).style.transform = "rotateY(0deg)";
+
+      //Check match if 2 cards have been flipped
+      if(count == 2 && card.getAttribute("data") == obj.getAttribute("data")){
+        card.style.visibility = "hidden";
+        nextElementAfter(card).style.visibility = "hidden";
+        obj.style.visibility = "hidden";
+        nextElementAfter(obj).style.visibility = "hidden";
+      }
+      card = obj;
+    }
+    function nextElementAfter(obj){
+      return obj.nextSibling.nextElementSibling;
+    }
+
+    function init(){
+      generateTilesData();
+      buildTiles();
+    }
+  </script>
+</head>
+<body onload="init();">
+
+  <div id="board">
+
+
+  </div>
+</body>
+</html>
