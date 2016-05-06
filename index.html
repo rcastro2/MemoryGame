@@ -5,7 +5,16 @@
 
   </title>
   <style>
-
+    #game{
+        width:500px;
+        padding:10px;
+        border-radius:10px;
+        box-shadow:5px 5px 5px black;
+        margin:0 auto;
+    }
+    #attempts{
+        font-family:"Comic Sans MS"
+    }
     #board{
       width:440px;
       height:440px;
@@ -53,12 +62,17 @@
   <script>
     var tilesData = [];
     var attempts = 0;
+    var numOfCardsFlipped = 0;
+    var lastCard;
     function generateTilesData(){
-      var pos1,pos2,tmp;
       for(i = 0; i < 8;i++){
         tilesData.push(i+1);
         tilesData.push(i+1);
       }
+      shuffleTilesData();
+    }
+    function shuffleTilesData(){
+      var pos1,pos2,tmp;
       for(i = 0; i < 100; i++){
         pos1 = Math.floor((Math.random()*16));
         pos2 = Math.floor((Math.random()*16));
@@ -75,12 +89,11 @@
       }
       document.getElementById("board").innerHTML = build.join("");
     }
-    var count = 0;
-    var card;
-    function selectTile(obj){
-      count++;
+
+    function selectTile(currentCard){
+      numOfCardsFlipped++;
       //Flip all cards if this is the 3rd card being flipped
-      if(count > 2){
+      if(numOfCardsFlipped > 2){
           var tilesFront = document.querySelectorAll(".front")
           var tilesBack = document.querySelectorAll(".back")
           for(i = 0;i < tilesFront.length;i++){
@@ -89,22 +102,25 @@
           for(i = 0;i < tilesBack.length;i++){
             tilesBack[i].style.transform = "rotateY(180deg)";
           }
-          count = 1;
-          attempts++;
+          numOfCardsFlipped = 1;
           console.log(attempts);
       }
       //Flip Card
-      obj.style.transform = "rotateY(180deg)";
-      nextElementAfter(obj).style.transform = "rotateY(0deg)";
+      currentCard.style.transform = "rotateY(180deg)";
+      nextElementAfter(currentCard).style.transform = "rotateY(0deg)";
 
-      //Check match if 2 cards have been flipped
-      if(count == 2 && card.getAttribute("data") == obj.getAttribute("data")){
-        card.style.visibility = "hidden";
-        nextElementAfter(card).style.visibility = "hidden";
-        obj.style.visibility = "hidden";
-        nextElementAfter(obj).style.visibility = "hidden";
+      //Check for match if 2 cards have been flipped
+      if(numOfCardsFlipped == 2){
+          if(lastCard.getAttribute("data") == currentCard.getAttribute("data")){
+            currentCard.style.visibility = "hidden";
+            nextElementAfter(currentCard).style.visibility = "hidden";
+            lastCard.style.visibility = "hidden";
+            nextElementAfter(lastCard).style.visibility = "hidden";
+          }
+          attempts++;
+          document.querySelector("#attempts").innerHTML = "Attempts: " + attempts
       }
-      card = obj;
+      lastCard = currentCard;
     }
     function nextElementAfter(obj){
       return obj.nextSibling.nextElementSibling;
@@ -117,8 +133,11 @@
   </script>
 </head>
 <body onload="init();">
-
+  <div id="game">
+  <img id="title" src="memoryGame.png">
+  <span id="attempts">Attempts: 0</span><hr>
   <div id="board">
+  </div>
 
 
   </div>
